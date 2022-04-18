@@ -29,6 +29,6 @@ private:
     std::vector<Color>m_colors;
 };
 
-void mainMapGen(int size, int tunnels, int rooms);
+//int mainMapGen(int size, int tunnels, int rooms);
 
 #endif // MAP_H

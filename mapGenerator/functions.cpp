@@ -60,26 +60,97 @@ int tunnelGen(int* array, int arrayIndex, int size, int tunnels)
     return arrayNextIndex;
 }
 
+int tunnelsGen(int* array, int size,  int tunnels){
+    if(size<tunnels) return -1;
+    int field=size*size;
 
+    if(field%2==0){
+        int startIndex = rand() % field;
+        int genCheck=0;
+        array[startIndex]=1;
+        while(genCheck>=field/2){
+            startIndex=tunnelGen(array, startIndex,size,tunnels);
+            for(int i =0; i<field ; i++) if (array[i]==1) genCheck ++;
+
+            if (genCheck<field/2) genCheck=0;
+        }
+
+    }
+    else {
+        int startIndex = rand() % field;
+        int genCheck=0;
+        array[startIndex]=1;
+        while(genCheck>=(field-1)/2){
+            startIndex=tunnelGen(array, startIndex,size,tunnels);
+            for(int i =0; i<field ; i++) if (array[i]==1) genCheck ++;
+            if(genCheck<field/2) genCheck=0;
+            }
+        }
+    return 1;
+}
+
+int roomGen(int* array, int size, int roomSize){
+    int field=size*size;
+    for(int i =0; i<field; i++){
+        if (array[i]==1) {
+            int roomSeed =rand() % field + 1;
+            if(roomSeed==field) {
+                //int x = rand() % roomSize +1;//Tu się na razie zatrzymam, sprawdzam czy pokój się zmieści na mapie z innymi pokojami
+            }
+        }
+    }
+
+    return 0;
+}
+int roomsGen(int* array, int size){
+    return 0;
+}
 
 // 0 - sciana, 1 - puste miejsce, 2 - specjał
-void mainMapGen(int size, int tunnels, int rooms, int density) {
+int mainMapGen(int size, int tunnels, int rooms) {
+    if(size<tunnels) return -1;
 
-    int field=size*size;
 //Generator tablicy
     int* arrayToCreateMap=arrayBuilder(size);
 
     srand(time(NULL));
-
-    int startIndex = rand() % field;
-    arrayToCreateMap[startIndex]=1;
-    for(int i=0; i<<density; i++){
-        startIndex=tunnelGen(arrayToCreateMap, startIndex,size,tunnels);
-    }
-
-
+    tunnelsGen(arrayToCreateMap, size, tunnels);
 
     delete[] arrayToCreateMap;
+    return 1;
 }
 
 
+
+
+//int mainMapGen(int size, int tunnels, int rooms) {
+//    if(size<tunnels) return -1;
+
+//    int field=size*size;
+////Generator tablicy
+//    int* arrayToCreateMap=arrayBuilder(size);
+
+//    srand(time(NULL));
+//    if(field%2==0){
+//        int startIndex = rand() % field;
+//        int genCheck=0;
+//        arrayToCreateMap[startIndex]=1;
+//        while(genCheck>=field/2){
+//            startIndex=tunnelGen(arrayToCreateMap, startIndex,size,tunnels);
+//            for(int i =0; i<field ; i++) if (arrayToCreateMap[i]==1) genCheck ++;
+//            }
+
+//    }
+//    else {
+//        int startIndex = rand() % field;
+//        int genCheck=0;
+//        arrayToCreateMap[startIndex]=1;
+//        while(genCheck>=(field-1)/2){
+//            startIndex=tunnelGen(arrayToCreateMap, startIndex,size,tunnels);
+//            for(int i =0; i<field ; i++) if (arrayToCreateMap[i]==1) genCheck ++;
+//            }
+//        }
+
+//    delete[] arrayToCreateMap;
+//    return 1;
+//}
