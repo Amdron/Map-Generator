@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
+#include "functions.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -12,3 +13,9 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
+
+void MainWindow::on_buttonGeneruj_clicked()
+{
+    mainMapGen(ui->spinRozmiar->value(), ui->spinTunele->value(),ui->spinPokoje->value(), ui->spinRozmiarPokoi->value());
+}
+

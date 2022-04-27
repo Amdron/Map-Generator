@@ -19,7 +19,7 @@
      <rect>
       <x>90</x>
       <y>10</y>
-      <width>321</width>
+      <width>441</width>
       <height>80</height>
      </rect>
     </property>
@@ -36,7 +36,7 @@
       </rect>
      </property>
      <property name="minimum">
-      <number>1</number>
+      <number>10</number>
      </property>
      <property name="maximum">
       <number>100</number>
@@ -107,6 +107,45 @@
       <string>Rozmiar</string>
      </property>
     </widget>
+    <widget class="QSpinBox" name="spinRozmiarPokoi">
+     <property name="geometry">
+      <rect>
+       <x>330</x>
+       <y>40</y>
+       <width>70</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="minimum">
+      <number>2</number>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label">
+     <property name="geometry">
+      <rect>
+       <x>330</x>
+       <y>20</y>
+       <width>101</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Rozmiar pokoi</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QPushButton" name="buttonGeneruj">
+    <property name="geometry">
+     <rect>
+      <x>660</x>
+      <y>480</y>
+      <width>111</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Generuj</string>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">

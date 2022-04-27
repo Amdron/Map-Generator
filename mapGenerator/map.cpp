@@ -49,7 +49,6 @@ void Map::Export(const char *path) const
 
     if (!f.is_open())
     {
-        //ui->showMessage("Couldn't create file!", 1000);
         return;
     }
 
@@ -150,5 +149,4 @@ void Map::Export(const char *path) const
         f.write(reinterpret_cast<char*>(bmpPad), paddingAmount);
     }
     f.close();
-    //std::cout<<"File created";
 }

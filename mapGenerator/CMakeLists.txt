@@ -21,8 +21,11 @@ set(PROJECT_SOURCES
         mainwindow.ui
         map.h
         map.cpp
+        room.h
+        room.cpp
         functions.h
         functions.cpp
+
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
