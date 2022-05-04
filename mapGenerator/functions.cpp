@@ -2,6 +2,7 @@
 #include <time.h>
 #include <QImage>
 #include <QDebug>
+#include <QPixmap>
 #include "functions.h"
 #include "room.h"
 
@@ -246,3 +247,10 @@ int mainMapGen(int size, int tunnels, int rooms, int roomSize) {
 }
 
 
+
+int importMap(const Ui::MainWindow *ui)
+{
+    QPixmap pix("C:/Programowanie C++/Qt/mapGenerator/build-mapGenerator-Desktop_Qt_6_2_0_MinGW_64_bit-Debug/"+ui->lineNazwa->text());
+    ui->labelDisplay->setPixmap(pix.scaled(400,400));
+    return 1;
+}

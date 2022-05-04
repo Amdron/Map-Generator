@@ -1,5 +1,8 @@
 #ifndef FUNCTIONS_H
 #define FUNCTIONS_H
+#include <QString>
+#include "mainwindow.h"
+#include "./ui_mainwindow.h"
 
 int mainMapGen(int size, int tunnels, int rooms, int roomSize);
 
@@ -11,6 +14,7 @@ int roomGen(int* array, int size, int rooms, int roomSize);
 
 int* arrayBuilder(int size);
 int drawBitMap (int* mapArray, int size, unsigned int bias);
+int importMap(const Ui::MainWindow* ui);
 
 
 #endif // FUNCTIONS_H

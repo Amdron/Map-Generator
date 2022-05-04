@@ -18,6 +18,8 @@ public:
 private slots:
     void on_buttonGeneruj_clicked();
 
+    void on_buttonImport_clicked();
+
 private:
     Ui::MainWindow *ui;
 };

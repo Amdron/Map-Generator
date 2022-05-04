@@ -19,3 +19,9 @@ void MainWindow::on_buttonGeneruj_clicked()
     mainMapGen(ui->spinRozmiar->value(), ui->spinTunele->value(),ui->spinPokoje->value(), ui->spinRozmiarPokoi->value());
 }
 
+
+void MainWindow::on_buttonImport_clicked()
+{
+    importMap(ui);
+}
+
