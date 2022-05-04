@@ -1,8 +1,8 @@
 #include <stdlib.h>
 #include <time.h>
-#include <qDebug>
+#include <QImage>
+#include <QDebug>
 #include "functions.h"
-#include "map.h"
 #include "room.h"
 
 
@@ -76,7 +76,7 @@ int tunnelsGen(int* array, int size,  int tunnels){
         int startIndex = rand() % field;
         int genCheck=0;
         array[startIndex]=1;
-        while(genCheck<field/4){
+        while(genCheck<field/2){
             startIndex=tunnelGen(array, startIndex,size,tunnels);
             for(int i =0; i<field ; i++) if (array[i]==1) genCheck ++;
             if (genCheck<field/2) genCheck=0;
@@ -100,12 +100,17 @@ int tunnelsGen(int* array, int size,  int tunnels){
 //Tworzy tabelę adresów wszystkich tuneli
 int** tunnelsTranscription(int* array, int size, int genCheck){
     if(genCheck<1) return NULL;
+
     int** arrayTunnels=new int*[genCheck];
     for(int i =0; i<genCheck; i++) arrayTunnels[i]=0;
 
     int tile=0;
     for(int i=0; i<size*size; i++) {
-        if(array[i]==1) {arrayTunnels[tile]=&array[i]; tile++;}
+        if(array[i]==1) {
+            arrayTunnels[tile]=&array[i];
+            tile++;
+            if (tile==genCheck) break;
+        }
     }
 
     return arrayTunnels;
@@ -114,7 +119,7 @@ int** tunnelsTranscription(int* array, int size, int genCheck){
 //Generuje pokoje na mapie
 int roomGen(int* mapArray, int** tunnelArray, int size, int rooms, int roomSize, int genCheck){
     int field=size*size;
-    if (size-roomSize<size/2) return -1;
+    //if (size-roomSize<size/2) return -1;
     int roomCounter=0;
     int roomCheck=0;
     Room* roomArray=new Room[rooms];
@@ -124,8 +129,8 @@ int roomGen(int* mapArray, int** tunnelArray, int size, int rooms, int roomSize,
             int roomSeed= rand() % field +1;
             if(roomSeed==field){
                 int cell2=tunnelArray[i]-&mapArray[0]; //Komórka mapy na której znajduje się tunel
-                int width2 = rand() % roomSize + 1;
-                int height2 = rand() % roomSize + 1;
+                int width2 = rand() % roomSize + 2;
+                int height2 = rand() % roomSize + 2;
                 if(cell2%size + width2<=size && cell2-(height2 -1)*size>=0 && !(roomCounter==0)){
                     int x2=cell2%size;
                     int y2=(cell2-x2)/size;
@@ -134,21 +139,16 @@ int roomGen(int* mapArray, int** tunnelArray, int size, int rooms, int roomSize,
                         int y1=roomArray[i].getY();
                         int width1=roomArray[i].getWidth();
                         int height1=roomArray[i].getHeight();
-                        if(x2>=x1 && y2>=y1 && (x2-x1<=width1 && y2-y1>height2 || x2-x1>width1)){
-
+                        if(x2>=x1 && y2>=y1 && (x2-x1<=width1 && y2-y1>height2 || x2-x1>width1)){roomCheck=0;}
+                        else if(x2<=x1 && y2>=y1 && (x1-x2<= width2 && y2-y1>height2 || x1-x2>width2)){roomCheck=0;}
+                        else if(x2>=x1 && y2<=y1 && (x2-x1<=width1 && y1-y2>height1 || x2-x1>width1)){roomCheck=0;}
+                        else if (x2<=x1 && y2<=y1 &&(x1-x2<=width2 && y1-y2>height1 || x1-x2>width2)) {roomCheck=0;}
+                        else {
+                            roomCheck=-1;
+                            break;
                         }
-                        else if(x2<=x1 && y2>=y1 && (x1-x2<= width2 && y2-y1>height2 || x1-x2>width2)){
-
-                        }
-                        else if(x2>=x1 && y2<=y1 && (x2-x1<=width1 && y1-y2>height1 || x2-x1>width1)){
-
-                        }
-                        else if (x2<=x1 && y2<=y1 &&(x1-x2<=width2 && y1-y2>height1 || x1-x2>width2)) {
-
-                        }
-                        else {roomCheck=-1; break;};
                     }
-                    if(roomCheck!=-1) {
+                    if(roomCheck!=-1){
                         roomArray[roomCounter]=Room(width2, height2, tunnelArray[i]);
                         roomArray[roomCounter].setX(&mapArray[0], size);
                         roomArray[roomCounter].setY(&mapArray[0], size);
@@ -178,27 +178,53 @@ int roomGen(int* mapArray, int** tunnelArray, int size, int rooms, int roomSize,
 
 
     delete [] roomArray;
-    return 0;
+    return 1;
 }
 
-int drawBitMap(int* mapArray, int size){
+int drawBitMap(int* mapArray, int size, unsigned int bias){
+    if(size<2) return -1;
     int height = size;
     int width = size;
-    Map map(width, height);
+    int column = size;
+    int columnSize = bias;
+    int row = size;
+    int rowSize = bias;
+    int newWidth= width*bias;
+    int newHeight= height*bias;
+    int * tempArray= new int[newWidth*newHeight];
+
+    for(int i=0; i<newWidth*newHeight; i++) tempArray[i]=0;
 
 
-
-    for (int y = 0; y < height; y++)
-    {
-        for (int  x = 0; x < width; x++)
-        {
-            if(mapArray[x+height*y]==0) map.setColor(Color(0,0,0), x, y);
-            else if(mapArray[x+height*y]==1) map.setColor(Color(220,220,220), x, y);
-            else map.setColor(Color(119,136,153), x, y);
+    for(int c=0; c<column; c++){
+        for(int r=0; r<row; r++){
+            if(mapArray[c+r*width]==1){
+                for(int cs=0; cs<columnSize; cs++){
+                    for(int rs=0; rs<rowSize; rs++) tempArray[c*bias+r*newWidth*bias+cs*newWidth+rs]=1;
+                }
+            }
+            else if(mapArray[c+r*width]==2) {
+                for(int cs=0; cs<columnSize; cs++){
+                    for(int rs=0; rs<rowSize; rs++) tempArray[c*bias+r*newWidth*bias+cs*newWidth+rs]=2;
+                }
+            }
         }
     }
-
-    map.Export("temp.bmp");
+//    qDebug()<<"Deklarujemy i definiujemy QRgb i map";
+    const QRgb black = qRgb(0,0,0);
+    const QRgb white = qRgb(255,255,255);
+    const QRgb silver = qRgb(192,192,192);
+    QImage* map=new QImage(newWidth, newHeight, QImage::Format_RGB888);
+//    qDebug()<<"Przepisywanie tempArray do map";
+    for(int i=0; i<newWidth*newHeight; i++){
+        if(tempArray[i]==0) map->setPixel(i%newWidth,(i-i%newWidth)/newWidth, black);
+        else if(tempArray[i]==1) map->setPixel(i%newWidth,(i-i%newWidth)/newWidth, white);
+        else map->setPixel(i%newWidth,(i-i%newWidth)/newWidth, silver);
+    }
+   map->save("temp.bmp");
+//    qDebug()<<"Ende";
+    delete [] tempArray;
+    delete map;
     return 0;
 }
 
@@ -208,15 +234,12 @@ int mainMapGen(int size, int tunnels, int rooms, int roomSize) {
 
 //Generator tablicy
     int* arrayToCreateMap=arrayBuilder(size);
-    qDebug()<<"Wchodzimy do mainMapGen";
-
     srand(time(NULL));
     int amountOfTunnelTiles=tunnelsGen(arrayToCreateMap, size, tunnels);
     int** arrayTunnels= tunnelsTranscription(arrayToCreateMap, size, amountOfTunnelTiles);
-    roomGen(arrayToCreateMap, arrayTunnels, size, rooms, roomSize, amountOfTunnelTiles);
-    qDebug()<<"Czy dochodzi do tego etapu?";
-    drawBitMap(arrayToCreateMap, size);
-    qDebug()<<"Yep";
+    int roomGenCheck=roomGen(arrayToCreateMap, arrayTunnels, size, rooms, roomSize, amountOfTunnelTiles);
+
+    if(roomGenCheck==1) {qDebug()<<"drawBitMap"; drawBitMap(arrayToCreateMap, size, 16);}
     delete[] arrayTunnels;
     delete[] arrayToCreateMap;
     return 1;

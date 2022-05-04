@@ -19,8 +19,6 @@ set(PROJECT_SOURCES
         mainwindow.cpp
         mainwindow.h
         mainwindow.ui
-        map.h
-        map.cpp
         room.h
         room.cpp
         functions.h

@@ -10,7 +10,7 @@ int** tunnelsTranscription(int* array, int size, int genCheck);
 int roomGen(int* array, int size, int rooms, int roomSize);
 
 int* arrayBuilder(int size);
-int fillMap(int* mapArray, int size);
+int drawBitMap (int* mapArray, int size, unsigned int bias);
 
 
 #endif // FUNCTIONS_H
